@@ -27,3 +27,21 @@ git push
 
 # Watch Flux automatically scale your deployment
 kubectl get deployments nginx -w
+
+# Force immediate sync (don't wait for interval)
+flux reconcile source git flux-system
+
+# Check what Flux is managing
+flux get all
+
+# View Flux logs
+flux logs --all-namespaces --follow --tail=10
+
+# See what changed in last sync
+flux diff source git flux-system
+
+# Suspend auto-sync (for debugging)
+flux suspend kustomization flux-system
+
+# Resume auto-sync
+flux resume kustomization flux-system
