@@ -29,6 +29,9 @@ cilium hubble ui
 kubectl get pods -A
 -> see all pods across all namespaces
 
+kubectl logs -n kube-flannel kube-flannel-ds-v99qc
+-> see individual pod logs
+
 kubectl get pods -o wide
 -> get all pods ips and what node it is running on
 
