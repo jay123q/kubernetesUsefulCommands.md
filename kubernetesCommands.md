@@ -41,3 +41,15 @@ if you are seeing that the controlplane node in
 kubectl get node
 -> Status is showing NotReady
 You can fix this by using 'sudo systemctl restart kubelet' if it is a cilium networking issue
+
+kubectl describe pod <pod-name>
+-> find what is stopping a pod
+
+kubectl delete pod foo --force
+https://kubernetes.io/docs/reference/kubectl/generated/kubectl_delete/
+
+kubectl delete pod argocd -n argocd-application-controller-1 --grace-period=0 --force
+
+kubectl describe pod argocd-server-64dfb9989b-wj5wc -n argocd | tail -20
+
+kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints
