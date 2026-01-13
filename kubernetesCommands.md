@@ -13,19 +13,6 @@ sudo kubeadm init
 rm -rf ~/.kube/cache
 -> remove cache to handle errant weirder errors
 
-
-INSTALL CNI
-CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
-GOOS=$(go env GOOS)
-GOARCH=$(go env GOARCH)
-curl -L --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-$>
-sudo tar -C /usr/local/bin -xzvf cilium-${GOOS}-${GOARCH}.tar.gz
-rm cilium-${GOOS}-${GOARCH}.tar.gz
-
-# To view the web UI
-cilium hubble ui
--> this provides deep packet visibility
-
 kubectl get pods -A
 -> see all pods across all namespaces
 
@@ -53,3 +40,6 @@ kubectl delete pod argocd -n argocd-application-controller-1 --grace-period=0 --
 kubectl describe pod argocd-server-64dfb9989b-wj5wc -n argocd | tail -20
 
 kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints
+
+kubectl get configmap cilium-config -n kube-system -o yaml
+-> generate a yaml output that has the output
