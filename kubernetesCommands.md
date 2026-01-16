@@ -43,3 +43,5 @@ kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints
 
 kubectl get configmap cilium-config -n kube-system -o yaml
 -> generate a yaml output that has the output
+
+kubectl get pods -n kube-system -l k8s-app=cilium --sort-by='.status.containerStatuses[0].restartCount'
