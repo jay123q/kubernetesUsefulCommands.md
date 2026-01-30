@@ -10,6 +10,9 @@ flux bootstrap gitlab \
 # create a flux SSH secret
 flux create secret git flux-system --url=git@gitlab.com/minisform-kuber-cluster.git --ssh-key-algorithm=ecdsa --ssh-ecdsa-curve=p521
 
+https://fluxcd.io/flux/cmd/flux_create_secret_git/
+https://fluxcd.io/flux/cmd/flux_create_secret_git/
+
 We are going to be using flux to automatically deploy gitlab
 # Check Flux components
 kubectl get pods -n flux-system

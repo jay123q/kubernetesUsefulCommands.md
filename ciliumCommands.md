@@ -13,3 +13,7 @@ cilium hubble ui
 
 curl http://192.168.1.112:32046 
 -> works this uses node port via metallb
+
+
+curl http://192.168.1.112:32046
+  # Or open in your browser!   
