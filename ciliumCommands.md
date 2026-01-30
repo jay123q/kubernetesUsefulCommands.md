@@ -9,3 +9,7 @@ rm cilium-${GOOS}-${GOARCH}.tar.gz
 # To view the web UI
 cilium hubble ui
 -> this provides deep packet visibility
+
+
+curl http://192.168.1.112:32046 
+-> works this uses node port via metallb

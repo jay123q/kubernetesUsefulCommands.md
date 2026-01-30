@@ -45,3 +45,18 @@ kubectl get configmap cilium-config -n kube-system -o yaml
 -> generate a yaml output that has the output
 
 kubectl get pods -n kube-system -l k8s-app=cilium --sort-by='.status.containerStatuses[0].restartCount'
+-> search by all apps in the kube-system namespace and look for cilium with the status 0
+
+kubectl get ipaddresspools -A && kubectl get l2advertisements -A
+-> who is advertising on L2
+
+
+Any service with type: LoadBalancer gets a MetalLB IP                                 
+kubectl create service loadbalancer my-app --tcp=80:8080                                
+                                                                                          
+MetalLB automatically assigns an IP from the pool                                     
+You can then access it at 192.168.1.20X                                               
+curl http://192.168.1.200  # Returns your application                                   
+                                                                                          
+The flux-system reconciliation will eventually complete once all resources stabilize.   
+The core functionality is working perfectly!

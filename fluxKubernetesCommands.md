@@ -7,6 +7,8 @@ flux bootstrap gitlab \
   --path=clusters/my-cluster \
   --personal
 
+# create a flux SSH secret
+flux create secret git flux-system --url=git@gitlab.com/minisform-kuber-cluster.git --ssh-key-algorithm=ecdsa --ssh-ecdsa-curve=p521
 
 We are going to be using flux to automatically deploy gitlab
 # Check Flux components
@@ -45,3 +47,5 @@ flux suspend kustomization flux-system
 
 # Resume auto-sync
 flux resume kustomization flux-system
+
+
