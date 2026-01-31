@@ -17,3 +17,5 @@ curl http://192.168.1.112:32046
 
 curl http://192.168.1.112:32046
   # Or open in your browser!   
+
+https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/

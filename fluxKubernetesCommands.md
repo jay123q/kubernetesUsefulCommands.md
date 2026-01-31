@@ -30,14 +30,6 @@ flux check
 
 Now if we update nginx replicas, flux will automatically redeploy our instances and kuber:
 
-# Edit the deployment file
-sed -i 's/replicas: 2/replicas: 3/' clusters/my-cluster/apps/nginx/deployment.yaml
-
-# Commit and push
-git add .
-git commit -m "Scale nginx to 3 replicas"
-git push
-
 # See live flux deploy logs from git
 kubectl get gitrepository flux-system -n flux-system -o yaml
 
