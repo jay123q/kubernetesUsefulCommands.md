@@ -7,6 +7,11 @@ ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_new -C "joshuamclapp@gmail.com"
 -> generate a new key in -f dir
 
 
+#TODO
+  From your local network, add a server in Minecraft with:                                
+  - Server Address: 192.168.1.200 or 192.168.1.112:30777                                  
+  - The LoadBalancer IP (192.168.1.200) will work once you're on a wired connection 
+
 sudo kubeadm reset -f
 -> kill all processes currently running on kubernentes
 
