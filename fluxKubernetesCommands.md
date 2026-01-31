@@ -7,10 +7,18 @@ flux bootstrap gitlab \
   --path=clusters/my-cluster \
   --personal
 
-# create a flux SSH secret
-flux create secret git flux-system --url=git@gitlab.com/minisform-kuber-cluster.git --ssh-key-algorithm=ecdsa --ssh-ecdsa-curve=p521
+flux bootstrap gitlab \
+  --deploy-token-auth \
+  --owner=joshuamclapp \
+  --repository=minecraft-cluster-gitops\
+  --branch=master \
+  --path=clusters \
+  --personal
 
-https://fluxcd.io/flux/cmd/flux_create_secret_git/
+# create a flux SSH secret, the PAT give access to all repos
+
+flux create secret git flux-system --url=https://git@gitlab.com/minisform-kuber-cluster.git --password=<given token> --username=joshuamclapp
+
 https://fluxcd.io/flux/cmd/flux_create_secret_git/
 
 We are going to be using flux to automatically deploy gitlab
@@ -30,8 +38,8 @@ git add .
 git commit -m "Scale nginx to 3 replicas"
 git push
 
-# Watch Flux automatically scale your deployment
-kubectl get deployments nginx -w
+# See live flux deploy logs from git
+kubectl get gitrepository flux-system -n flux-system -o yaml
 
 # Force immediate sync (don't wait for interval)
 flux reconcile source git flux-system
