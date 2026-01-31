@@ -3,6 +3,9 @@ ssh jclapp@192.168.1.112
 
 You have disabled rootlogin in SSH by disabling 'PermitRootLogin' in /etc/ssh/sshd_config, and other users from adding keys to log in by disabling 'PasswordAuthentication' in the same file. This means that only already athenticated users can log in.
 
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_new -C "joshuamclapp@gmail.com"
+-> generate a new key in -f dir
+
 
 sudo kubeadm reset -f
 -> kill all processes currently running on kubernentes
