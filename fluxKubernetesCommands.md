@@ -42,7 +42,7 @@ kubectl get secret flux-system -n flux-system -o jsonpath='{.data.identity\.pub}
 ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzODQAAABhBLs3YyJY1GbotA25t6ImjLoqWstbgxyNYRShgp9xYrs4GUHmU3+ogrfsmsz/dsGo7wO1TL0pipVX5QmDDrcC7o9Oo3EBVgCZ/tpIcDaaBatRJQct+T9HKi5JOdI/uhtn3g==
 
 # Deploy key for minecraft_CoR:
-kubectl get secret minecraft-cor -n flux-system -o jsonpath='{.data.identity\.pub}' | base64 -d
+kubectl get secret minecraft-gitops -n flux-system -o jsonpath='{.data.identity\.pub}' | base64 -d
 ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzODQAAABhBB1me3zVgWNVahZPtMudqEQILkYphpIhnqtyPt8Net9bgADV1ReVEyXugiCANc+FscPHdKc/pD9HLjVgM4dLH7Gk9Y3RoRPN4MRicX5B5aiyWXSKLK8Zc/ApBCgQV3/QNg==
 ═══════════════════════════════════════════════════════════════════
 STEP 3: Add BOTH deploy keys to GitHub
@@ -61,7 +61,7 @@ For minecraft_CoR:
   1. Copy the second key from Step 2
   2. Go to: https://github.com/jay123q/minecraft_CoR/settings/keys
   3. Click "Add deploy key"
-  4. Title: flux-minecraft-cor
+  4. Title: flux-minecraft-gitops
   5. Paste the key
   6. DO NOT check "Allow write access"
   7. Click "Add key"
@@ -80,13 +80,13 @@ STEP 5: Reconcile and verify
 
 # Force reconciliation
 flux reconcile source git minecraft-gitops -n flux-system
-flux reconcile source git minecraft-cor -n flux-system
+flux reconcile source git minecraft-gitops -n flux-system
 
 # Verify all sources are ready
 flux get sources git -A
 
 # Check your new Minecraft server
-kubectl get all -n minecraft-cor
+kubectl get all -n minecraft-gitops
 
 ═══════════════════════════════════════════════════════════════════
 EXPECTED RESULT
@@ -94,10 +94,10 @@ EXPECTED RESULT
 
 flux-system        → Can be deleted (optional)
 minecraft-gitops   → READY=True ✓
-minecraft-cor      → READY=True ✓
+minecraft-gitops      → READY=True ✓
 
-minecraft-cor namespace will be created
-minecraft-cor-server pod will be deployed
+minecraft-gitops namespace will be created
+minecraft-gitops-server pod will be deployed
 Server available at: 192.168.1.202:25565
 
 ═══════════════════════════════════════════════════════════════════
@@ -106,6 +106,10 @@ QUICK COPY-PASTE COMMANDS
 
 # Fix minecraft-gitops URL
 kubectl patch gitrepository minecraft-gitops -n flux-system --type=json -p='[{"op": "replace", "path": "/spec/url", "value": "ssh://git@github.com/jay123q/minecraft-cluster-gitops.git"}]'
+
+
+kubectl patch gitrepository minecraft-gitops -n flux-system --type=json -p='[{"op": "replace", "path": "/spec/url", "value": "ssh://git@github.com:jay123q/minisform-kuber-cluster.git"}]'
+
 kubectl patch gitrepository minecraft-gitops -n flux-system --type=json -p='[{"op": "add", "path": "/spec/secretRef", "value": {"name": "flux-system"}}]'
 
 # Get deploy keys
@@ -115,22 +119,27 @@ kubectl get secret flux-system -n flux-system -o jsonpath='{.data.identity\.pub}
 echo ""
 echo "Add to: https://github.com/jay123q/minecraft-cluster-gitops/settings/keys"
 echo ""
-echo "══════ MINECRAFT-COR DEPLOY KEY ══════"
-kubectl get secret minecraft-cor -n flux-system -o jsonpath='{.data.identity\.pub}' | base64 -d
+echo "══════ minecraft-gitops DEPLOY KEY ══════"
+kubectl get secret minecraft-gitops -n flux-system -o jsonpath='{.data.identity\.pub}' | base64 -d
 echo ""
 echo "Add to: https://github.com/jay123q/minecraft_CoR/settings/keys"
 echo ""
 
+# generate new keys for git
+flux create secret git flux-system \
+  --url=ssh://git@github.com/jay123q/minisform-kuber-cluster.git \
+  --namespace=flux-system
+
+
 # After adding keys, reconcile
 flux reconcile source git minecraft-gitops -n flux-system
-flux reconcile source git minecraft-cor -n flux-system
 
 # Verify
 flux get sources git -A
-kubectl get all -n minecraft-cor
+kubectl get all -n minecraft-gitops
 
 ═══════════════════════════════════════════════════════════════════
-flux reconcile source git minecraft-cor -n flux-system
+flux reconcile source git minecraft-gitops -n flux-system
 
 # Generate a new flux key
 
@@ -168,3 +177,28 @@ flux suspend kustomization flux-system
 flux resume kustomization flux-system
 
 
+kubectl get secret minecraft-gitops -n flux-system -o jsonpath='{.data.identity\.pub}' | base64 -d
+
+kubectl get secret flux-system -n flux-system -o jsonpath='{.data.identity\.pub}' | base64 -d
+
+flux create source git flux-system \
+  --url=ssh://git@github.com/jay123q/minisform-kuber-cluster.git \
+  --branch=main \
+  --secret-ref=flux-system \
+  --namespace=flux-system
+
+
+flux create secret git flux-system \
+  --url=ssh://git@github.com/jay123q/minecraft-cluster-gitops.git \
+  --namespace=flux-system
+
+
+flux reconcile kustomization flux-system
+
+flux reconcile source git flux-system
+flux reconcile source git minecraft-gitops
+
+flux reconcile source git minecraft-gitops -n flux-system
+
+# basic copy
+git commit -a -m "working more on kustomizations" && git push && flux reconcile source git flux-system && flux reconcile kustomization flux-system && flux get all

@@ -68,3 +68,14 @@ curl http://192.168.1.200  # Returns your application
                                                                                           
 The flux-system reconciliation will eventually complete once all resources stabilize.   
 The core functionality is working perfectly!
+
+# show me what is broken
+kubectl describe deployment -n minecraft-cor minecraft-cor-server
+-> show events on the deployment
+
+kubectl describe pod -n minecraft-cor -l app=minecraft-cor
+-> show events on the pod
+
+
+kubectl describe pod -n minecraft-cor -l app=minecraft-cor-backup
+-> show events on the pod
